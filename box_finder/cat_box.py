@@ -15,7 +15,6 @@ from tabulate import tabulate
 
 
 TABLE = 'simple'
-# TABLE = 'simple_grid'
 
 
 class BoxFinder:
@@ -62,23 +61,30 @@ class BoxFinder:
                 self.cat_coord = [x, y]
 
     def frame(self):
-        """Если кот не видит ящиков он будет двигаться в сторону неисследованной территории
+        """
+        Если кот не видит ящиков он будет двигаться в сторону неисследованной территории
         (даже если ящиков больше нет, но неисследованная территория есть).
-        Если неисследованной территории больше нет программа останавливается"""
+        Если неисследованной территории больше нет программа останавливается
+        """
         self.discover_fields()
         if self.found_box_coord == []:
             undiscovered = self.find_undiscovered_fields()
             if undiscovered == []:
-                BoxFinder.visualization(self.room)
+                self.interface(self.room)
                 print("Don't have any steps!")
                 return True
             self.direction_coord = self.find_nearest_coordinate(self.cat_coord, undiscovered)
         else:
             self.direction_coord = self.find_nearest_coordinate(self.cat_coord, self.found_box_coord)
-        BoxFinder.visualization(self.room)
+        self.interface(self.room)
         return False
 
     def processing(self):
+        """
+        При запуске метода processing начинается цикл, который дерижирует другими методами для моделирования
+        движения кота. Выход из цикла (и остановка работы класса) происходит когда вся территория разведана,
+        а коробки посещены.
+        """
         self.frame()
         while True:
             self.make_step(self.define_next_step(self.direction_coord))
@@ -87,6 +93,7 @@ class BoxFinder:
                 break
 
     def find_undiscovered_fields(self):
+        """Проверка неисследованных ячеек"""
         undiscovered = []
         for i in range(self.n):
             for j in range(self.n):
@@ -95,7 +102,8 @@ class BoxFinder:
         return undiscovered
 
     @staticmethod
-    def visualization(room):
+    def interface(room):
+        """Интерфейс для работы с классом"""
         print(tabulate(room, tablefmt=TABLE))
         input()
 
@@ -142,6 +150,7 @@ class BoxFinder:
         return next_step
 
     def define_possible_steps(self):
+        """Возвращает список всех возможных ходов с учетом границ"""
         list_of_possible_steps = []
         for i in range(self.cat_coord[0] - 1, self.cat_coord[0] + 2):
             if i < 0 or i >= self.n:
@@ -154,13 +163,10 @@ class BoxFinder:
         return list_of_possible_steps
 
     def make_step(self, next_step):
+        """Осуществление шага"""
         self.room[next_step[0]][next_step[1]] = self.cat
         self.room[self.cat_coord[0]][self.cat_coord[1]] = self.track
         self.cat_coord = next_step
         # delete founded box
         self.found_box_coord = [x for x in self.found_box_coord if x != self.cat_coord]
 
-
-if __name__ == '__main__':
-    test = BoxFinder()
-    test.processing()

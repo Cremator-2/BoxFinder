@@ -24,10 +24,11 @@
 4. Install dependencies:
     ```shell
     python -m pip install -r requirements.txt
+    python -m pip install -r requirements.txt
     ```
 
 5. Comment
     ```
     Для вывода следующего шага - ввести в консоли любой символ или нажать Enter
-    Сложность алгоритма, полагаю, O(n^2) от начальной точки не зависит.
+    Сложность алгоритма, полагаю, O(n^2). От начальной точки не зависит.
     ```
