@@ -24,7 +24,6 @@
 4. Install dependencies:
     ```shell
     python -m pip install -r requirements.txt
-    python -m pip install -r requirements.txt
     ```
 
 5. Comment
